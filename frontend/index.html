@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+  <title>ResumeRank — AI-Powered ATS Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav" id="nav">
+  <div class="nav-wrap">
+    <a href="#" class="nav-brand">
+      <div class="brand-dot"></div>
+      <span>ResumeRank</span>
+      <sup class="brand-v">AI</sup>
+    </a>
+    <div class="nav-links">
+      <a href="#analyzer-section" class="nl">Analyzer</a>
+      <a href="#builder-section" class="nl">Resume Builder</a>
+      <a href="#tips-section" class="nl">ATS Tips</a>
+    </div>
+    <div class="nav-right">
+      <div class="live-counter" id="liveCounter" title="Total resumes analyzed">
+        <div class="lc-dot"></div>
+        <span id="counterNum">—</span>
+        <span class="lc-label">analyzed</span>
+      </div>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+        <span class="icon-sun">☀</span><span class="icon-moon">◑</span>
+      </button>
+      <a href="#analyzer-section" class="btn-cta">Try Free →</a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mob-menu" id="mobMenu">
+    <a href="#analyzer-section" class="mm-link">Analyzer</a>
+    <a href="#builder-section" class="mm-link">Resume Builder</a>
+    <a href="#tips-section" class="mm-link">ATS Tips</a>
+    <a href="#analyzer-section" class="btn-cta" style="display:inline-block;margin-top:8px">Try Free →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-glow g1"></div>
+  <div class="hero-glow g2"></div>
+  <div class="hero-glow g3"></div>
+  <div class="hero-body" data-aos="up">
+    <div class="hero-pill">
+      <span class="hp-dot"></span>Universal ATS Analyzer — All Industries
+    </div>
+    <h1>Your Resume<br/><em>Deserves</em> to Get Seen</h1>
+    <p class="hero-sub">AI-powered analysis for <strong>every job category</strong> — Tech, Finance, Healthcare, Law, Education, and more. Real feedback in seconds.</p>
+    <div class="hero-btns">
+      <a href="#analyzer-section" class="btn-primary">Analyze My Resume →</a>
+      <a href="#builder-section" class="btn-outline">Resume Builder</a>
+    </div>
+    <div class="hero-chips">
+      <span>Technology</span><span>Finance</span><span>Healthcare</span>
+      <span>Law</span><span>Education</span><span>Management</span>
+      <span>Design</span><span>Research</span>
+    </div>
+  </div>
+</section>
+
+<!-- RECENT ANALYSIS BANNER -->
+<div class="recent-bar" id="recentBar" style="display:none">
+  <span>📋 Previous analysis found:</span>
+  <strong id="recentLabel">—</strong>
+  <button class="rb-view" id="rbView">View Results</button>
+  <button class="rb-x" id="rbX">✕</button>
+</div>
+
+<!-- ═══ ANALYZER SECTION ═══ -->
+<section class="main-section" id="analyzer-section">
+  <div class="wrap">
+    <div class="section-label">Free AI Tool</div>
+    <h2 class="section-title">Analyze Your Resume</h2>
+    <p class="section-sub">No signup · No email · No credit card · Results in seconds</p>
+
+    <!-- UPLOAD CARD -->
+    <div class="upload-card" id="uploadCard" data-aos="up">
+
+      <!-- Step 1: Category -->
+      <div class="step-row">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <label class="step-label">Job Category</label>
+          <div class="cat-grid" id="catGrid">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Role -->
+      <div class="step-row" id="roleRow" style="display:none">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <label class="step-label">Specific Role</label>
+          <div class="role-chips" id="roleChips">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Upload -->
+      <div class="step-row" id="uploadRow" style="display:none">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <input type="file" id="fileInput" accept=".pdf" hidden/>
+          <div class="drop-zone" id="dropZone">
+            <div class="dz-ring">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M16 24V10M16 10l-5 5M16 10l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="15" stroke="currentColor" stroke-width="1.2" stroke-dasharray="3 3.5"/></svg>
+            </div>
+            <p class="dz-main">Drop PDF resume here</p>
+            <p class="dz-hint">or <button class="dz-browse" id="browseBtn" type="button">browse file</button> · max 5 MB</p>
+          </div>
+          <div class="file-bar" id="fileBar" style="display:none">
+            <span class="fb-ico">📄</span>
+            <div class="fb-text"><span id="fbName">file.pdf</span><span id="fbSize"></span></div>
+            <button class="fb-rm" id="fbRm" type="button">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-analyze" id="analyzeBtn" disabled type="button">
+        Analyze Resume with AI
+      </button>
+
+    </div><!-- /upload-card -->
+
+    <!-- LOADING -->
+    <div class="loading-card" id="loadingCard" style="display:none">
+      <div class="ld-ring-wrap">
+        <svg viewBox="0 0 72 72" width="72" height="72">
+          <circle cx="36" cy="36" r="30" fill="none" stroke="var(--border)" stroke-width="5"/>
+          <circle id="ldArc" cx="36" cy="36" r="30" fill="none" stroke="url(#ldg)" stroke-width="5" stroke-linecap="round" stroke-dasharray="70 120" transform="rotate(-90 36 36)"/>
+          <defs><linearGradient id="ldg"><stop offset="0%" stop-color="var(--accent)"/><stop offset="100%" stop-color="var(--accent2)"/></linearGradient></defs>
+        </svg>
+        <span class="ld-pct" id="ldPct">0%</span>
+      </div>
+      <p class="ld-msg" id="ldMsg">Parsing resume…</p>
+      <div class="ld-steps">
+        <div class="ld-step" id="ls1"><div class="ls-dot"></div>Extract Text</div>
+        <div class="ld-step" id="ls2"><div class="ls-dot"></div>Scan Skills</div>
+        <div class="ld-step" id="ls3"><div class="ls-dot"></div>Match Keywords</div>
+        <div class="ld-step" id="ls4"><div class="ls-dot"></div>AI Feedback</div>
+        <div class="ld-step" id="ls5"><div class="ls-dot"></div>Build Report</div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-card" id="errorCard" style="display:none">
+      <div class="err-ico">⚠</div>
+      <p class="err-msg" id="errMsg">Could not reach server.</p>
+      <button class="btn-outline" id="errRetry" type="button">Try Again</button>
+    </div>
+
+    <!-- ═══ RESULTS SHELL ═══ -->
+    <div class="results-shell" id="resultsShell" style="display:none">
+
+      <div class="results-hdr">
+        <div class="ai-tag" id="aiTag"><span class="at-dot"></span><span id="aiTagText">AI Analysis</span></div>
+        <div class="results-actions">
+          <button class="btn-sm" id="downloadBtn" type="button">↓ Download PDF Report</button>
+          <button class="btn-sm" id="newAnalysisBtn" type="button">↺ New Analysis</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" id="tabsEl" role="tablist">
+        <button class="tab active" data-tab="0" role="tab">Score</button>
+        <button class="tab" data-tab="1" role="tab">Keywords</button>
+        <button class="tab" data-tab="2" role="tab">Strengths</button>
+        <button class="tab" data-tab="3" role="tab">AI Feedback</button>
+        <button class="tab" data-tab="4" role="tab">Expert Tips</button>
+      </div>
+
+      <div class="panels-vp" id="panelsVp">
+        <div class="panels-track" id="panelsTrack">
+
+          <!-- TAB 0: SCORE DASHBOARD -->
+          <div class="panel" id="panel0">
+            <div class="score-layout">
+              <!-- Ring -->
+              <div class="ring-card">
+                <div class="ring-wrap">
+                  <svg viewBox="0 0 140 140" width="160" height="160">
+                    <circle cx="70" cy="70" r="55" fill="none" stroke="var(--border)" stroke-width="11"/>
+                    <circle id="scoreArc" cx="70" cy="70" r="55" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="346" stroke-dashoffset="346" transform="rotate(-90 70 70)"/>
+                  </svg>
+                  <div class="ring-center">
+                    <span class="ring-num" id="ringNum">0</span>
+                    <span class="ring-of">/100</span>
+                    <span class="ring-grade" id="ringGrade">—</span>
+                  </div>
+                </div>
+                <p class="ring-verdict" id="ringVerdict"></p>
+              </div>
+
+              <!-- Metric bars -->
+              <div class="metric-grid">
+                <div class="mbar"><div class="mb-row"><span class="mb-l">ATS Score</span><span class="mb-v" id="mbAts">0</span></div><div class="mb-track"><div class="mb-fill accent1" id="mbAtsF"></div></div></div>
+                <div class="mbar"><div class="mb-row"><span class="mb-l">Job Match</span><span class="mb-v" id="mbMatch">0</span></div><div class="mb-track"><div class="mb-fill accent2" id="mbMatchF"></div></div></div>
+                <div class="mbar"><div class="mb-row"><span class="mb-l">Keyword Match</span><span class="mb-v" id="mbKw">0%</span></div><div class="mb-track"><div class="mb-fill green" id="mbKwF"></div></div></div>
+                <div class="mbar"><div class="mb-row"><span class="mb-l">Readability</span><span class="mb-v" id="mbRead">0</span></div><div class="mb-track"><div class="mb-fill amber" id="mbReadF"></div></div></div>
+              </div>
+            </div>
+
+            <!-- Stat row -->
+            <div class="stat-row">
+              <div class="stat-box"><span id="stWc">—</span><em>Words</em></div>
+              <div class="stat-box"><span id="stAv">—</span><em>Action Verbs</em></div>
+              <div class="stat-box"><span id="stQa">—</span><em>Quantified</em></div>
+              <div class="stat-box"><span id="stSk">—</span><em>Skills Found</em></div>
+            </div>
+
+            <!-- Info rows -->
+            <div class="info-panels">
+              <div class="info-panel">
+                <div class="ip-title">Contact</div>
+                <div class="ip-chips" id="contactChips"></div>
+              </div>
+              <div class="info-panel">
+                <div class="ip-title">Sections Found</div>
+                <div class="ip-chips" id="sectionChips"></div>
+              </div>
+              <div class="info-panel">
+                <div class="ip-title">Missing Sections</div>
+                <div class="ip-chips" id="missingChips"></div>
+              </div>
+            </div>
+
+            <!-- AI summary -->
+            <div class="ai-card">
+              <div class="ac-hd">AI Assessment</div>
+              <p id="summaryText">—</p>
+              <div class="verdict-tag" id="verdictTag"></div>
+            </div>
+
+            <!-- Recruiter view -->
+            <div class="recruiter-card">
+              <div class="rc-hd">👀 Recruiter View — First 10 Seconds</div>
+              <p id="recruiterText">—</p>
+            </div>
+          </div>
+
+          <!-- TAB 1: KEYWORDS -->
+          <div class="panel" id="panel1">
+            <div class="panel-title-row">
+              <h3>Skills & Keyword Match</h3>
+              <span class="match-tag" id="matchTag">0%</span>
+            </div>
+            <div class="two-bars">
+              <div class="tb-row"><span class="tb-l">Job Match Score</span><div class="tb-track"><div class="tb-fill accent2" id="tbMatch"></div></div><span class="tb-v" id="tbMatchV">—</span></div>
+              <div class="tb-row"><span class="tb-l">ATS Score</span><div class="tb-track"><div class="tb-fill accent1" id="tbAts"></div></div><span class="tb-v" id="tbAtsV">—</span></div>
+            </div>
+            <div class="kw-split">
+              <div class="kw-col">
+                <div class="kc-hd found">✓ Found <span id="kwFndCnt">0</span></div>
+                <div class="kw-list" id="kwFound"></div>
+              </div>
+              <div class="kw-col">
+                <div class="kc-hd miss">✗ Missing <span id="kwMissCnt">0</span></div>
+                <div class="kw-list" id="kwMiss"></div>
+              </div>
+            </div>
+            <div class="priority-card">
+              <div class="pc-hd">★ Top 5 Priority Gaps</div>
+              <div class="priority-list" id="priorityList"></div>
+            </div>
+            <div class="skills-panel">
+              <div class="sp-hd">All Detected Skills</div>
+              <div class="skills-wrap" id="skillsWrap"></div>
+            </div>
+          </div>
+
+          <!-- TAB 2: STRENGTHS & WEAKNESSES -->
+          <div class="panel" id="panel2">
+            <div class="panel-title-row"><h3>Strengths & Weaknesses</h3></div>
+            <div class="sw-cols">
+              <div class="sw-col">
+                <div class="swc-hd green-h">✓ Strengths</div>
+                <ul class="sw-list" id="strengthList"></ul>
+              </div>
+              <div class="sw-col">
+                <div class="swc-hd red-h">⚠ Weaknesses</div>
+                <ul class="sw-list" id="weakList"></ul>
+              </div>
+            </div>
+            <div class="rewrite-card">
+              <div class="rw-hd">→ AI Instant Rewrite</div>
+              <div class="rw-body" id="rwBody">—</div>
+            </div>
+            <div class="ba-card">
+              <div class="ba-hd">Score Potential — Before vs After Fixes</div>
+              <div class="ba-row"><span class="ba-l">Current</span><div class="ba-track"><div class="ba-cur" id="baCur"></div></div><span class="ba-v" id="baCurV">—</span></div>
+              <div class="ba-row"><span class="ba-l">After Fixes</span><div class="ba-track"><div class="ba-pot" id="baPot"></div></div><span class="ba-v" id="baPotV">—</span></div>
+            </div>
+          </div>
+
+          <!-- TAB 3: AI FEEDBACK -->
+          <div class="panel" id="panel3">
+            <div class="panel-title-row">
+              <h3>AI Suggestions</h3>
+              <button class="btn-copy" id="copySuggBtn" type="button">Copy All</button>
+            </div>
+            <ul class="sugg-list" id="suggList"></ul>
+            <div class="linkedin-card">
+              <div class="lc-hd">LinkedIn Optimization Tips</div>
+              <ul class="li-list" id="liList"></ul>
+            </div>
+            <div class="preview-card">
+              <div class="pv-hd">Extracted Text <button class="pv-toggle" id="pvToggle" type="button">Show ▾</button></div>
+              <div class="pv-body" id="pvBody" style="display:none"><pre id="pvText"></pre></div>
+            </div>
+          </div>
+
+          <!-- TAB 4: EXPERT TIPS -->
+          <div class="panel" id="panel4">
+            <div class="panel-title-row"><h3>Expert ATS Tips</h3><span class="role-pill" id="rolePill"></span></div>
+            <div class="tips-grid" id="tipsGrid"></div>
+            <div class="li-tips-card">
+              <div class="ltc-hd">LinkedIn Optimization</div>
+              <div class="li-tips-grid" id="liTipsGrid"></div>
+            </div>
+          </div>
+
+        </div><!-- /panels-track -->
+      </div><!-- /panels-vp -->
+
+      <!-- Slide nav -->
+      <div class="slide-nav">
+        <button class="sn-btn" id="slidePrev" disabled>←</button>
+        <div class="sn-dots" id="snDots"></div>
+        <button class="sn-btn" id="slideNext">→</button>
+      </div>
+
+    </div><!-- /results-shell -->
+
+  </div>
+</section>
+
+<!-- ═══ RESUME BUILDER SECTION ═══ -->
+<section class="main-section" id="builder-section" style="padding-top:60px">
+  <div class="wrap">
+    <div class="section-label">Premium Feature</div>
+    <h2 class="section-title">Resume Builder</h2>
+    <p class="section-sub">Generate a beautiful ATS-optimized resume from your analysis</p>
+
+    <!-- Locked state -->
+    <div class="builder-locked" id="builderLocked" data-aos="up">
+      <div class="lock-icon">🔒</div>
+      <h3>Unlock Resume Builder</h3>
+      <p>Get 20+ ATS-friendly templates auto-filled with your resume data and AI suggestions</p>
+      <ul class="lock-features">
+        <li>✓ 5 professional templates (Minimal, Modern, Corporate, Creative, Student)</li>
+        <li>✓ Auto-fill from uploaded resume</li>
+        <li>✓ Option to include AI-suggested skills</li>
+        <li>✓ Download as PDF with your name in filename</li>
+        <li>✓ ATS-optimized formatting</li>
+      </ul>
+      <div class="lock-price">
+        <span class="price-main">₹99</span>
+        <span class="price-note">one-time unlock · unlimited use</span>
+      </div>
+      <button class="btn-unlock" id="unlockBtn" type="button">Unlock for ₹99 →</button>
+      <p class="demo-note">Demo mode: click to simulate payment success</p>
+    </div>
+
+    <!-- Payment simulation overlay -->
+    <div class="payment-overlay" id="paymentOverlay" style="display:none">
+      <div class="payment-modal">
+        <div class="pm-header">
+          <div class="pm-logo">💳</div>
+          <h3>Secure Payment</h3>
+        </div>
+        <div class="pm-amount">₹99 <span>— Resume Builder Lifetime Access</span></div>
+        <div class="pm-form">
+          <input type="text" placeholder="Card number: 4111 1111 1111 1111" disabled value="4111 1111 1111 1111" class="pm-input"/>
+          <div class="pm-row">
+            <input type="text" placeholder="MM/YY" disabled value="12/26" class="pm-input half"/>
+            <input type="text" placeholder="CVV" disabled value="***" class="pm-input half"/>
+          </div>
+          <input type="text" placeholder="Name on card" disabled value="Demo User" class="pm-input"/>
+        </div>
+        <button class="btn-pay" id="payBtn" type="button">Pay ₹99 →</button>
+        <button class="btn-cancel-pay" id="cancelPayBtn" type="button">Cancel</button>
+        <p class="pm-note">This is a simulated payment for demo purposes</p>
+      </div>
+    </div>
+
+    <!-- Builder unlocked UI -->
+    <div class="builder-ui" id="builderUi" style="display:none" data-aos="up">
+      <!-- Template selector -->
+      <div class="builder-step">
+        <div class="bs-num">1</div>
+        <div class="bs-body">
+          <label class="bs-label">Choose Template</label>
+          <div class="template-grid" id="templateGrid">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- AI skill option -->
+      <div class="builder-step">
+        <div class="bs-num">2</div>
+        <div class="bs-body">
+          <label class="bs-label">Include AI-Suggested Skills?</label>
+          <div class="ai-skill-choice">
+            <label class="asc-option" id="aiSkillYes">
+              <input type="radio" name="aiSkill" value="yes" checked/>
+              <div class="asc-card">
+                <div class="asc-icon">🤖</div>
+                <div><strong>Yes, include AI skills</strong><p>Add recommended keywords for better ATS score</p></div>
+              </div>
+            </label>
+            <label class="asc-option" id="aiSkillNo">
+              <input type="radio" name="aiSkill" value="no"/>
+              <div class="asc-card">
+                <div class="asc-icon">✋</div>
+                <div><strong>No, keep genuine only</strong><p>Only use skills found in my uploaded resume</p></div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Name input for filename -->
+      <div class="builder-step">
+        <div class="bs-num">3</div>
+        <div class="bs-body">
+          <label class="bs-label" for="userNameInput">Your Name (for filename)</label>
+          <input type="text" id="userNameInput" class="name-input" placeholder="e.g. Aman Sharma" maxlength="40"/>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="generateResumeBtn" type="button">Generate Resume Preview →</button>
+
+      <!-- Resume Preview -->
+      <div class="resume-preview-wrap" id="resumePreviewWrap" style="display:none">
+        <div class="rp-header">
+          <h4>Resume Preview</h4>
+          <button class="btn-primary" id="downloadResumeBtn" type="button">⬇ Download as PDF</button>
+        </div>
+        <div class="resume-preview" id="resumePreview">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+
+    </div><!-- /builder-ui -->
+  </div>
+</section>
+
+<!-- ═══ ATS TIPS SLIDER ═══ -->
+<section class="tips-outer" id="tips-section">
+  <div class="wrap">
+    <div class="section-label">Expert Knowledge</div>
+    <h2 class="section-title">ATS Secrets Candidates Miss</h2>
+    <div class="tips-wrap" data-aos="up">
+      <div class="tips-overflow">
+        <div class="tips-track" id="tipsTrack">
+          <div class="tip-slide"><span class="tn">01</span><h4>Use Standard Section Headers</h4><p>ATS parses "Work Experience" easily. Avoid creative names like "My Journey" — bots are not impressed.</p><span class="t-tag">Formatting</span></div>
+          <div class="tip-slide"><span class="tn">02</span><h4>Mirror the Job Description</h4><p>Copy exact phrases from the posting. If they write "cross-functional collaboration", use those exact words.</p><span class="t-tag">Keywords</span></div>
+          <div class="tip-slide"><span class="tn">03</span><h4>Never Use Tables or Columns</h4><p>Multi-column layouts and text boxes destroy ATS parsing. Always use a clean single-column format.</p><span class="t-tag">Layout</span></div>
+          <div class="tip-slide"><span class="tn">04</span><h4>Professional File Naming</h4><p>Save as FirstName_LastName_Role.pdf. Spaces and special characters in filenames signal carelessness.</p><span class="t-tag">File Format</span></div>
+          <div class="tip-slide"><span class="tn">05</span><h4>Quantify Everything</h4><p>"Managed a team of 8 and delivered a project 2 weeks early, saving ₹3L in operational costs" beats any vague claim.</p><span class="t-tag">Impact</span></div>
+          <div class="tip-slide"><span class="tn">06</span><h4>No Keywords in Images</h4><p>Skill bars, icons with text, and infographic-style resumes are completely invisible to ATS scanners.</p><span class="t-tag">Parsing</span></div>
+          <div class="tip-slide"><span class="tn">07</span><h4>Tailor Every Application</h4><p>Generic resumes score 30% lower on average. Spend 10 minutes customizing keywords per application.</p><span class="t-tag">Strategy</span></div>
+        </div>
+      </div>
+      <div class="tips-ctrl">
+        <button class="tc-btn" id="tipsPrev">←</button>
+        <div class="tips-dots" id="tipsDots"></div>
+        <button class="tc-btn" id="tipsNext">→</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="f-brand">ResumeRank<sup>AI</sup></div>
+    <p>AI-Powered · Universal Job Support · Free Forever</p>
+    <p class="f-small">Groq LLaMA 3 · BCA Final Year Project · No data stored</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
